@@ -1,11 +1,14 @@
 package me.hsgamer.bettercrates;
 
+import me.hsgamer.bettercrates.command.GiveKeyCommand;
+import me.hsgamer.bettercrates.command.SetBlockCommand;
 import me.hsgamer.bettercrates.config.MessageConfig;
 import me.hsgamer.bettercrates.listener.CrateListener;
 import me.hsgamer.bettercrates.listener.InteractListener;
 import me.hsgamer.bettercrates.manager.CrateManager;
 import me.hsgamer.hscore.bukkit.baseplugin.BasePlugin;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
+import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.config.proxy.ConfigGenerator;
 
 public final class BetterCrates extends BasePlugin {
@@ -14,10 +17,13 @@ public final class BetterCrates extends BasePlugin {
 
     @Override
     public void enable() {
+        MessageUtils.setPrefix(messageConfig::getPrefix);
         Permissions.register();
 
         registerListener(new CrateListener(this));
         registerListener(new InteractListener(this));
+        registerCommand(new GiveKeyCommand(this));
+        registerCommand(new SetBlockCommand(this));
     }
 
     @Override

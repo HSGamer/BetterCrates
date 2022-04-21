@@ -164,12 +164,16 @@ public class CrateManager {
 
     public void removeCrateBlock(Location location) {
         Optional.ofNullable(crateBlockMap.remove(location.getBlock().getLocation()))
-                .ifPresent(CrateBlock::clear);
-        saveCrateBlocks();
+                .ifPresent(crateBlock -> {
+                    crateBlock.clear();
+                    saveCrateBlocks();
+                });
     }
 
-    public void addCrateBlock(Location location, Crate crate, int delay) {
-        crateBlockMap.put(location.getBlock().getLocation(), new CrateBlock(location, crate, delay));
+    public void addCrateBlock(Location location, Crate crate, long delay) {
+        CrateBlock crateBlock = new CrateBlock(location, crate, delay);
+        crateBlock.init();
+        crateBlockMap.put(location.getBlock().getLocation(), crateBlock);
         saveCrateBlocks();
     }
 
@@ -179,5 +183,13 @@ public class CrateManager {
 
     public List<String> getCrateIds() {
         return new ArrayList<>(crateMap.keySet());
+    }
+
+    public Optional<CrateKey> getCrateKey(String id) {
+        return Optional.ofNullable(crateKeyMap.get(id));
+    }
+
+    public List<String> getCrateKeyIds() {
+        return new ArrayList<>(crateKeyMap.keySet());
     }
 }
