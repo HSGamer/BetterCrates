@@ -53,7 +53,7 @@ public class CommandReward implements RewardContent {
     private enum CommandType {
         CONSOLE((player, command) -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)),
         PLAYER(Bukkit::dispatchCommand),
-        MESSAGE(MessageUtils::sendMessage);
+        MESSAGE((player, command) -> MessageUtils.sendMessage(player, command, ""));
 
         private final BiConsumer<Player, String> consumer;
 
