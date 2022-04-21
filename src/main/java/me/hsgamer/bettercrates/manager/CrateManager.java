@@ -93,11 +93,14 @@ public class CrateManager {
                 Map<String, Object> settings = config.getNormalizedValues(key, false);
                 if (settings.containsKey("lines")) {
                     lines.addAll(CollectionUtils.createStringListFromObject(settings.get("lines"), false));
-                } else if (settings.containsKey("key")) {
+                }
+                if (settings.containsKey("key")) {
                     crateKey = crateKeyMap.get(String.valueOf(settings.get("key")));
-                } else if (settings.containsKey("offset-y")) {
+                }
+                if (settings.containsKey("offset-y")) {
                     offsetY = Double.parseDouble(String.valueOf(settings.get("offset-y")));
-                } else if (settings.containsKey("display-name")) {
+                }
+                if (settings.containsKey("display-name")) {
                     crateDisplayName = MessageUtils.colorize(String.valueOf(settings.get("display-name")));
                 }
             } else {
