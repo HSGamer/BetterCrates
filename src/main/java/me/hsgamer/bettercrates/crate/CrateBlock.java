@@ -19,6 +19,7 @@ public class CrateBlock {
     private final Location location;
     @Getter
     private final Crate crate;
+    @Getter
     private final long delay;
     @Getter
     private final Hologram hologram;

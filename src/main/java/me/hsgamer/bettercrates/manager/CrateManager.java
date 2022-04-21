@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CrateManager {
     private final File crateFolder;
@@ -140,10 +141,38 @@ public class CrateManager {
                 Location location = new Location(Bukkit.getWorld(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
                 Crate crate = crateMap.get(split[4]);
                 if (crate != null) {
-                    int chance = Integer.parseInt(split[5]);
-                    crateBlockMap.put(location, new CrateBlock(location, crate, chance));
+                    int delay = Integer.parseInt(split[5]);
+                    crateBlockMap.put(location, new CrateBlock(location, crate, delay));
                 }
             }
         }
+    }
+
+    private void saveCrateBlocks() {
+        blockConfig.set("blocks", crateBlockMap.values().stream().map(crateBlock -> Objects.requireNonNull(crateBlock.getLocation().getWorld()).getName() + "," + crateBlock.getLocation().getBlockX() + "," + crateBlock.getLocation().getBlockY() + "," + crateBlock.getLocation().getBlockZ() + "," + crateBlock.getCrate().getId() + "," + crateBlock.getDelay()).collect(Collectors.toList()));
+        blockConfig.save();
+    }
+
+    public Optional<CrateBlock> getCrateBlock(Location location) {
+        return Optional.ofNullable(crateBlockMap.get(location.getBlock().getLocation()));
+    }
+
+    public void removeCrateBlock(Location location) {
+        Optional.ofNullable(crateBlockMap.remove(location.getBlock().getLocation()))
+                .ifPresent(CrateBlock::clear);
+        saveCrateBlocks();
+    }
+
+    public void addCrateBlock(Location location, Crate crate, int delay) {
+        crateBlockMap.put(location.getBlock().getLocation(), new CrateBlock(location, crate, delay));
+        saveCrateBlocks();
+    }
+
+    public Optional<Crate> getCrate(String id) {
+        return Optional.ofNullable(crateMap.get(id));
+    }
+
+    public List<String> getCrateIds() {
+        return new ArrayList<>(crateMap.keySet());
     }
 }
