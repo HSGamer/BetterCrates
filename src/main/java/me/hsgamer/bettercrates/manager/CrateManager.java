@@ -3,6 +3,7 @@ package me.hsgamer.bettercrates.manager;
 import com.lewdev.probabilitylib.ProbabilityCollection;
 import me.hsgamer.bettercrates.BetterCrates;
 import me.hsgamer.bettercrates.api.reward.RewardContent;
+import me.hsgamer.bettercrates.builder.ItemBuilder;
 import me.hsgamer.bettercrates.builder.RewardContentBuilder;
 import me.hsgamer.bettercrates.crate.Crate;
 import me.hsgamer.bettercrates.crate.CrateBlock;
@@ -13,7 +14,6 @@ import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -57,14 +57,17 @@ public class CrateManager {
     private void loadKeys() {
         for (File file : Objects.requireNonNull(keyFolder.listFiles())) {
             if (file.isFile()) {
-                loadKey(file).ifPresent(key -> crateKeyMap.put(key.getId(), key));
+                CrateKey key = loadKey(file);
+                crateKeyMap.put(key.getId(), key);
             }
         }
     }
 
-    private Optional<CrateKey> loadKey(File file) {
-        // TODO: load key
-        return Optional.empty();
+    private CrateKey loadKey(File file) {
+        BukkitConfig config = new BukkitConfig(file);
+        config.setup();
+        Map<String, Object> itemMap = config.getNormalizedValues("item", false);
+        return new CrateKey(file.getName(), ItemBuilder.buildItem(itemMap));
     }
 
     private void loadCrates() {
@@ -96,7 +99,9 @@ public class CrateManager {
             } else {
                 Map<String, Object> reward = config.getNormalizedValues(key, false);
                 String displayName = MessageUtils.colorize(reward.containsKey("display-name") ? String.valueOf(reward.get("display-name")) : key);
-                ItemStack displayItem = new ItemStack(Material.STONE); // TODO: Add support for display item
+                // noinspection unchecked
+                Map<String, Object> displayItemMap = reward.containsKey("display-item") ? (Map<String, Object>) reward.get("display-item") : Collections.emptyMap();
+                ItemStack displayItem = ItemBuilder.buildItem(displayItemMap);
                 int chance = reward.containsKey("chance") ? Integer.parseInt(String.valueOf(reward.get("chance"))) : 100;
                 List<RewardContent> contents = new ArrayList<>();
                 Object rawContents = reward.get("contents");
@@ -105,14 +110,14 @@ public class CrateManager {
                         if (rawContent instanceof Map) {
                             // noinspection unchecked
                             Map<String, Object> contentMap = (Map<String, Object>) rawContent;
-                            RewardContent content = RewardContentBuilder.INSTANCE.buildReward(contentMap);
+                            RewardContent content = RewardContentBuilder.buildContent(contentMap);
                             contents.add(content);
                         }
                     }
                 } else if (rawContents instanceof Map) {
                     // noinspection unchecked
                     Map<String, Object> contentMap = (Map<String, Object>) rawContents;
-                    RewardContent content = RewardContentBuilder.INSTANCE.buildReward(contentMap);
+                    RewardContent content = RewardContentBuilder.buildContent(contentMap);
                     contents.add(content);
                 }
                 rewards.add(new Reward(key, displayName, displayItem, contents), chance);
