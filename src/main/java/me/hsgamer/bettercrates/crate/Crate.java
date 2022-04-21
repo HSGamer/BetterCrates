@@ -51,6 +51,7 @@ public class Crate {
 
             ItemMeta meta = displayItem.getItemMeta();
             if (meta != null) {
+                meta = meta.clone();
                 List<String> lore = Optional.ofNullable(meta.getLore()).orElse(Collections.emptyList());
                 List<String> finalLore = new ArrayList<>();
                 for (String s : plugin.getMessageConfig().getPreviewLoreTemplate()) {
