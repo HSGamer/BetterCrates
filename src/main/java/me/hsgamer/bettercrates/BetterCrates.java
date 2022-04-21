@@ -1,5 +1,6 @@
 package me.hsgamer.bettercrates;
 
+import fr.mrmicky.fastinv.FastInvManager;
 import me.hsgamer.bettercrates.command.GiveKeyCommand;
 import me.hsgamer.bettercrates.command.SetBlockCommand;
 import me.hsgamer.bettercrates.config.MessageConfig;
@@ -21,6 +22,7 @@ public final class BetterCrates extends BasePlugin {
         MessageUtils.setPrefix(messageConfig::getPrefix);
         Permissions.register();
 
+        FastInvManager.register(this);
         registerListener(new CrateListener(this));
         registerListener(new InteractListener(this));
         registerCommand(new GiveKeyCommand(this));

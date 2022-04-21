@@ -84,4 +84,14 @@ public interface MessageConfig {
     default String getSetBlockSuccess() {
         return "&aYou have set the block to be a crate block";
     }
+
+    @ConfigPath("preview-title")
+    default String getPreviewTitle() {
+        return "&4&lPreview Crate {name}";
+    }
+
+    default String getPreviewTitle(Crate crate) {
+        return getPreviewTitle()
+                .replace("{name}", crate.getDisplayName());
+    }
 }
