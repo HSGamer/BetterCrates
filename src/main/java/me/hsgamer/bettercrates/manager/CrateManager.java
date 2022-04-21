@@ -110,6 +110,7 @@ public class CrateManager {
                 Map<String, Object> displayItemMap = reward.containsKey("display-item") ? (Map<String, Object>) reward.get("display-item") : Collections.emptyMap();
                 ItemStack displayItem = ItemBuilder.buildItem(displayItemMap);
                 int chance = reward.containsKey("chance") ? Integer.parseInt(String.valueOf(reward.get("chance"))) : 100;
+                int fakeChance = reward.containsKey("fake-chance") ? Integer.parseInt(String.valueOf(reward.get("fake-chance"))) : chance;
                 List<RewardContent> contents = new ArrayList<>();
                 Object rawContents = reward.get("contents");
                 if (rawContents instanceof List) {
@@ -127,7 +128,7 @@ public class CrateManager {
                     RewardContent content = RewardContentBuilder.buildContent(contentMap);
                     contents.add(content);
                 }
-                rewards.add(new Reward(key, rewardDisplayName, displayItem, contents), chance);
+                rewards.add(new Reward(key, rewardDisplayName, fakeChance, displayItem, contents), chance);
             }
         }
         lines.replaceAll(MessageUtils::colorize);

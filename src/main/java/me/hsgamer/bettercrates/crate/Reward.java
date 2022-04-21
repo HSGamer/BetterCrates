@@ -10,6 +10,7 @@ import java.util.List;
 public class Reward {
     String id;
     String displayName;
+    int fakeChance;
     ItemStack displayItem;
     List<RewardContent> contents;
 }

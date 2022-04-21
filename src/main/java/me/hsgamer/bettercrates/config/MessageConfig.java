@@ -1,5 +1,6 @@
 package me.hsgamer.bettercrates.config;
 
+import me.hsgamer.bettercrates.config.converter.StringListConverter;
 import me.hsgamer.bettercrates.crate.Crate;
 import me.hsgamer.bettercrates.crate.CrateKey;
 import me.hsgamer.bettercrates.crate.Reward;
@@ -7,6 +8,8 @@ import me.hsgamer.hscore.config.annotation.ConfigPath;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public interface MessageConfig {
     @ConfigPath("prefix")
@@ -93,5 +96,14 @@ public interface MessageConfig {
     default String getPreviewTitle(Crate crate) {
         return getPreviewTitle()
                 .replace("{name}", crate.getDisplayName());
+    }
+
+    @ConfigPath(value = "preview-lore-template", converter = StringListConverter.class)
+    default List<String> getPreviewLoreTemplate() {
+        return List.of(
+                "{lore}",
+                "",
+                "&e&lChance: &f{chance}/{total-chance}"
+        );
     }
 }
