@@ -1,0 +1,5 @@
+name: BetterCrates
+version: '${project.version}'
+main: me.hsgamer.bettercrates.BetterCrates
+api-version: 1.16
+authors: [ HSGamer ]
