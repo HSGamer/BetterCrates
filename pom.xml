@@ -113,6 +113,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.jojodmo</groupId>
+            <artifactId>ItemBridge</artifactId>
+            <version>b0054538c1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>hscore-builder</artifactId>
             <version>${core.version}</version>

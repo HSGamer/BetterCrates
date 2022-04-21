@@ -3,6 +3,7 @@ package me.hsgamer.bettercrates;
 import me.hsgamer.bettercrates.command.GiveKeyCommand;
 import me.hsgamer.bettercrates.command.SetBlockCommand;
 import me.hsgamer.bettercrates.config.MessageConfig;
+import me.hsgamer.bettercrates.hooks.Hooks;
 import me.hsgamer.bettercrates.listener.CrateListener;
 import me.hsgamer.bettercrates.listener.InteractListener;
 import me.hsgamer.bettercrates.manager.CrateManager;
@@ -24,6 +25,8 @@ public final class BetterCrates extends BasePlugin {
         registerListener(new InteractListener(this));
         registerCommand(new GiveKeyCommand(this));
         registerCommand(new SetBlockCommand(this));
+
+        Hooks.register();
     }
 
     @Override
