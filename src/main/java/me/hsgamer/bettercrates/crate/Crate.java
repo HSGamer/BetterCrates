@@ -45,7 +45,7 @@ public class Crate {
         AtomicInteger totalFakeChance = new AtomicInteger(0);
         rewards.iterator().forEachRemaining(reward -> totalFakeChance.addAndGet(reward.getObject().getFakeChance()));
         rewards.iterator().forEachRemaining(reward -> {
-            ItemStack displayItem = reward.getObject().getDisplayItem();
+            ItemStack displayItem = reward.getObject().getDisplayItem().clone();
             int fakeChance = reward.getObject().getFakeChance();
             int chance = reward.getProbability();
 
