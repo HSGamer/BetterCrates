@@ -60,10 +60,15 @@ public class CrateBlock {
         }
     }
 
-    public boolean open(Player player) {
+    public CrateResponse open(Player player) {
         if (currentTask.get() != null) {
-            return false;
+            return CrateResponse.PENDING;
         }
+        CrateKey key = crate.getCrateKey();
+        if (key != null && !key.checkAndTake(player)) {
+            return CrateResponse.NOT_AFFORD;
+        }
+
         setBlockLid(true);
 
         Reward reward = crate.getRandomReward();
@@ -77,6 +82,7 @@ public class CrateBlock {
             currentTask.set(null);
         }, delay);
         currentTask.set(task);
-        return true;
+
+        return CrateResponse.SUCCESS;
     }
 }
