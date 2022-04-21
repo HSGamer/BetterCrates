@@ -4,6 +4,7 @@ import com.lewdev.probabilitylib.ProbabilityCollection;
 import fr.mrmicky.fastinv.FastInv;
 import lombok.Value;
 import me.hsgamer.bettercrates.BetterCrates;
+import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,7 +36,7 @@ public class Crate {
         List<ItemStack> displayItems = new ArrayList<>();
         rewards.iterator().forEachRemaining(reward -> displayItems.add(reward.getObject().getDisplayItem()));
         int chestSize = getChestSize(displayItems.size());
-        FastInv previewInv = new FastInv(chestSize, JavaPlugin.getPlugin(BetterCrates.class).getMessageConfig().getPreviewTitle(this));
+        FastInv previewInv = new FastInv(chestSize, MessageUtils.colorize(JavaPlugin.getPlugin(BetterCrates.class).getMessageConfig().getPreviewTitle(this)));
         displayItems.forEach(previewInv::addItem);
         previewInv.open(player);
     }
