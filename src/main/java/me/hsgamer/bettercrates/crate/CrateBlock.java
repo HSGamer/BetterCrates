@@ -10,8 +10,9 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Lidded;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CrateBlock {
     @Getter
@@ -21,7 +22,7 @@ public class CrateBlock {
     private final long delay;
     @Getter
     private final Hologram hologram;
-    private final AtomicBoolean isOpen = new AtomicBoolean(false);
+    private final AtomicReference<BukkitTask> currentTask = new AtomicReference<>();
 
     public CrateBlock(Location location, Crate crate, long delay) {
         this.location = location;
@@ -37,6 +38,14 @@ public class CrateBlock {
     public void clear() {
         setBlockLid(false);
         hologram.clear();
+        BukkitTask task = currentTask.getAndSet(null);
+        if (task != null) {
+            try {
+                task.cancel();
+            } catch (Exception ignored) {
+                // IGNORED
+            }
+        }
     }
 
     private void setBlockLid(boolean open) {
@@ -52,22 +61,22 @@ public class CrateBlock {
     }
 
     public boolean open(Player player) {
-        if (isOpen.get()) {
+        if (currentTask.get() != null) {
             return false;
         }
         setBlockLid(true);
-        isOpen.set(true);
 
         Reward reward = crate.getRandomReward();
         hologram.setReward(reward);
         reward.getContents().forEach(rewardType -> rewardType.reward(player));
 
         BetterCrates plugin = JavaPlugin.getPlugin(BetterCrates.class);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             setBlockLid(false);
             hologram.reset();
-            isOpen.lazySet(false);
+            currentTask.set(null);
         }, delay);
+        currentTask.set(task);
         return true;
     }
 }
