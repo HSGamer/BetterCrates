@@ -2,6 +2,6 @@ package me.hsgamer.bettercrates.crate;
 
 public enum CrateResponse {
     SUCCESS,
-    PENDING,
+    DELAYING,
     NOT_AFFORD
 }

@@ -64,7 +64,7 @@ public class CrateBlock {
 
     public CrateResponse open(Player player) {
         if (currentTask.get() != null) {
-            return CrateResponse.PENDING;
+            return CrateResponse.DELAYING;
         }
         CrateKey key = crate.getCrateKey();
         if (key != null && !key.checkAndTake(player)) {
@@ -82,7 +82,7 @@ public class CrateBlock {
         BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             setBlockLid(false);
             hologram.reset();
-            currentTask.set(null);
+            currentTask.lazySet(null);
         }, delay);
         currentTask.set(task);
 

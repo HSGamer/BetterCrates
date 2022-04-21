@@ -2,6 +2,7 @@ package me.hsgamer.bettercrates.crate;
 
 import com.lewdev.probabilitylib.ProbabilityCollection;
 import lombok.Value;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -19,5 +20,9 @@ public class Crate {
             throw new IllegalStateException("Crate " + id + " has no rewards");
         }
         return rewards.get();
+    }
+
+    public void openPreview(Player player) {
+        // TODO
     }
 }

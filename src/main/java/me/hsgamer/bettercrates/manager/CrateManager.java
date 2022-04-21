@@ -142,6 +142,7 @@ public class CrateManager {
             String[] split = string.split(",", 6);
             if (split.length == 6) {
                 Location location = new Location(Bukkit.getWorld(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+                if (location.getBlock().getType().isAir()) continue;
                 Crate crate = crateMap.get(split[4]);
                 if (crate != null) {
                     int delay = Integer.parseInt(split[5]);
@@ -149,6 +150,7 @@ public class CrateManager {
                 }
             }
         }
+        saveCrateBlocks();
     }
 
     private void saveCrateBlocks() {

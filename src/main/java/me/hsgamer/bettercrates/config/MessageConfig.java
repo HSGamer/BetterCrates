@@ -20,8 +20,8 @@ public interface MessageConfig {
         return "&cNot enough key";
     }
 
-    @ConfigPath("crate-in-use")
-    default String getCrateInUse() {
+    @ConfigPath("crate-delaying")
+    default String getCrateDelaying() {
         return "&cCrate is being used by another player";
     }
 
