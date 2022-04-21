@@ -8,6 +8,7 @@ import java.util.List;
 @Value
 public class Crate {
     String id;
+    String displayName;
     ProbabilityCollection<Reward> rewards;
     List<String> lines;
     double offSetY;

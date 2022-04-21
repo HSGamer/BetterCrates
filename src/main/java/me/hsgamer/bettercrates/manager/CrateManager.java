@@ -83,6 +83,7 @@ public class CrateManager {
         BukkitConfig config = new BukkitConfig(file);
         config.setup();
         String id = file.getName();
+        String crateDisplayName = id;
         ProbabilityCollection<Reward> rewards = new ProbabilityCollection<>();
         List<String> lines = new ArrayList<>();
         double offsetY = 1.5;
@@ -96,10 +97,12 @@ public class CrateManager {
                     crateKey = crateKeyMap.get(String.valueOf(settings.get("key")));
                 } else if (settings.containsKey("offset-y")) {
                     offsetY = Double.parseDouble(String.valueOf(settings.get("offset-y")));
+                } else if (settings.containsKey("display-name")) {
+                    crateDisplayName = MessageUtils.colorize(String.valueOf(settings.get("display-name")));
                 }
             } else {
                 Map<String, Object> reward = config.getNormalizedValues(key, false);
-                String displayName = MessageUtils.colorize(reward.containsKey("display-name") ? String.valueOf(reward.get("display-name")) : key);
+                String rewardDisplayName = MessageUtils.colorize(reward.containsKey("display-name") ? String.valueOf(reward.get("display-name")) : key);
                 // noinspection unchecked
                 Map<String, Object> displayItemMap = reward.containsKey("display-item") ? (Map<String, Object>) reward.get("display-item") : Collections.emptyMap();
                 ItemStack displayItem = ItemBuilder.buildItem(displayItemMap);
@@ -121,14 +124,14 @@ public class CrateManager {
                     RewardContent content = RewardContentBuilder.buildContent(contentMap);
                     contents.add(content);
                 }
-                rewards.add(new Reward(key, displayName, displayItem, contents), chance);
+                rewards.add(new Reward(key, rewardDisplayName, displayItem, contents), chance);
             }
         }
         lines.replaceAll(MessageUtils::colorize);
         if (rewards.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(new Crate(id, rewards, lines, offsetY, crateKey));
+            return Optional.of(new Crate(id, crateDisplayName, rewards, lines, offsetY, crateKey));
         }
     }
 

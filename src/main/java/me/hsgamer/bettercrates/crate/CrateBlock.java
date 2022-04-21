@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.hsgamer.bettercrates.BetterCrates;
 import me.hsgamer.bettercrates.api.hologram.Hologram;
 import me.hsgamer.bettercrates.manager.HologramProviderManager;
+import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -70,13 +71,14 @@ public class CrateBlock {
             return CrateResponse.NOT_AFFORD;
         }
 
-        setBlockLid(true);
+        BetterCrates plugin = JavaPlugin.getPlugin(BetterCrates.class);
 
+        setBlockLid(true);
         Reward reward = crate.getRandomReward();
         hologram.setReward(reward);
         reward.getContents().forEach(rewardType -> rewardType.reward(player));
+        MessageUtils.sendMessage(player, plugin.getMessageConfig().getRewardMessage(crate, reward));
 
-        BetterCrates plugin = JavaPlugin.getPlugin(BetterCrates.class);
         BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             setBlockLid(false);
             hologram.reset();
