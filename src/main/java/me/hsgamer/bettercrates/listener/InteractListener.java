@@ -46,7 +46,11 @@ public class InteractListener implements Listener {
                     break;
             }
         } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            crateBlock.getCrate().openPreview(player);
+            if (player.isSneaking()) {
+                event.setCancelled(false);
+            } else {
+                crateBlock.getCrate().openPreview(player);
+            }
         }
     }
 }
