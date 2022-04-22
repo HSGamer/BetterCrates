@@ -23,8 +23,6 @@ public class InteractListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return; // WHY??
-
         if (!event.hasBlock()) return;
         Block block = event.getClickedBlock();
         assert block != null;
@@ -32,6 +30,7 @@ public class InteractListener implements Listener {
         Optional<CrateBlock> optionalCrateBlock = plugin.getCrateManager().getCrateBlock(block.getLocation());
         if (optionalCrateBlock.isEmpty()) return;
         event.setCancelled(true);
+        if (event.getHand() != EquipmentSlot.HAND) return; // WHY??
         CrateBlock crateBlock = optionalCrateBlock.get();
 
         Player player = event.getPlayer();

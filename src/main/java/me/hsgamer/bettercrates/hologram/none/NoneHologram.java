@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -42,12 +43,10 @@ public class NoneHologram implements Hologram {
             i.setPickupDelay(Integer.MAX_VALUE);
             i.setGravity(false);
             i.setInvulnerable(true);
-            i.setOwner(null);
-            i.setSilent(true);
             i.setCustomNameVisible(true);
             i.setCustomName(reward.getDisplayName());
             i.setPersistent(false);
-            i.setThrower(null);
+            i.setVelocity(new Vector(0, 0, 0));
         });
         itemRef.set(item);
     }

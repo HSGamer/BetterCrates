@@ -16,7 +16,6 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CrateBlock {
-    @Getter
     private final Location location;
     @Getter
     private final Crate crate;
@@ -76,8 +75,8 @@ public class CrateBlock {
         setBlockLid(true);
         Reward reward = crate.getRandomReward();
         hologram.setReward(reward);
-        reward.getContents().forEach(rewardType -> rewardType.reward(player));
         MessageUtils.sendMessage(player, plugin.getMessageConfig().getRewardMessage(crate, reward));
+        reward.getContents().forEach(rewardType -> rewardType.reward(player));
 
         BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             setBlockLid(false);
@@ -87,5 +86,9 @@ public class CrateBlock {
         currentTask.set(task);
 
         return CrateResponse.SUCCESS;
+    }
+
+    public Location getLocation() {
+        return location.clone();
     }
 }
