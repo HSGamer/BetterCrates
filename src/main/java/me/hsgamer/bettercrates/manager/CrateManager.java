@@ -3,7 +3,7 @@ package me.hsgamer.bettercrates.manager;
 import com.lewdev.probabilitylib.ProbabilityCollection;
 import me.hsgamer.bettercrates.BetterCrates;
 import me.hsgamer.bettercrates.api.reward.RewardContent;
-import me.hsgamer.bettercrates.builder.ItemBuilder;
+import me.hsgamer.bettercrates.builder.ItemStackBuilder;
 import me.hsgamer.bettercrates.builder.RewardContentBuilder;
 import me.hsgamer.bettercrates.crate.Crate;
 import me.hsgamer.bettercrates.crate.CrateBlock;
@@ -68,7 +68,7 @@ public class CrateManager {
         BukkitConfig config = new BukkitConfig(file);
         config.setup();
         Map<String, Object> itemMap = config.getNormalizedValues("item", false);
-        return new CrateKey(file.getName(), ItemBuilder.buildItem(itemMap));
+        return new CrateKey(file.getName(), ItemStackBuilder.buildItem(itemMap));
     }
 
     private void loadCrates() {
@@ -108,7 +108,7 @@ public class CrateManager {
                 String rewardDisplayName = MessageUtils.colorize(reward.containsKey("display-name") ? String.valueOf(reward.get("display-name")) : key);
                 // noinspection unchecked
                 Map<String, Object> displayItemMap = reward.containsKey("display-item") ? (Map<String, Object>) reward.get("display-item") : Collections.emptyMap();
-                ItemStack displayItem = ItemBuilder.buildItem(displayItemMap);
+                ItemStack displayItem = ItemStackBuilder.buildItem(displayItemMap);
                 int chance = reward.containsKey("chance") ? Integer.parseInt(String.valueOf(reward.get("chance"))) : 100;
                 int fakeChance = reward.containsKey("fake-chance") ? Integer.parseInt(String.valueOf(reward.get("fake-chance"))) : chance;
                 List<RewardContent> contents = new ArrayList<>();

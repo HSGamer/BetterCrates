@@ -1,7 +1,7 @@
 package me.hsgamer.bettercrates.hooks;
 
 import com.jojodmo.itembridge.ItemBridge;
-import me.hsgamer.bettercrates.builder.ItemBuilder;
+import me.hsgamer.bettercrates.builder.ItemStackBuilder;
 import org.bukkit.Bukkit;
 
 import java.util.Optional;
@@ -13,7 +13,7 @@ public final class Hooks {
 
     public static void register() {
         if (Bukkit.getPluginManager().isPluginEnabled("ItemBridge")) {
-            ItemBuilder.INSTANCE.register(map ->
+            ItemStackBuilder.INSTANCE.register(map ->
                             Optional.ofNullable(map.get("itembridge"))
                                     .map(String::valueOf)
                                     .map(ItemBridge::getItemStack)

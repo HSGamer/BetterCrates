@@ -1,7 +1,7 @@
 package me.hsgamer.bettercrates.reward;
 
 import me.hsgamer.bettercrates.api.reward.RewardContent;
-import me.hsgamer.bettercrates.builder.ItemBuilder;
+import me.hsgamer.bettercrates.builder.ItemStackBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,7 +12,7 @@ public class ItemReward implements RewardContent {
 
     @Override
     public void init(Map<String, Object> map) {
-        item = ItemBuilder.buildItem(map);
+        item = ItemStackBuilder.buildItem(map);
     }
 
     @Override
