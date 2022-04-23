@@ -88,7 +88,7 @@ public class CrateManager {
         String crateDisplayName = id;
         ProbabilityCollection<Reward> rewards = new ProbabilityCollection<>();
         List<String> lines = new ArrayList<>(plugin.getMessageConfig().getDefaultLines());
-        double offsetY = 1.5;
+        double offsetY = 2.3;
         CrateKey crateKey = null;
         for (String key : config.getKeys(false)) {
             if (key.equals("settings")) {
