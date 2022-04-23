@@ -44,7 +44,7 @@ public class DHHologram implements Hologram {
     public void setReward(Reward reward) {
         List<String> lines = List.of(
                 reward.getDisplayName(),
-                toLine(reward.getDisplayItem())
+                "#ICON: " + toLine(reward.getDisplayItem())
         );
         DHAPI.setHologramLines(hologram, lines);
     }
