@@ -69,7 +69,7 @@ public class CrateManager {
     private CrateKey loadKey(File file) {
         BukkitConfig config = new BukkitConfig(file);
         config.setup();
-        Map<String, Object> itemMap = config.getNormalizedValues("item", false);
+        Map<String, Object> itemMap = config.getNormalizedValues(false);
         return new CrateKey(file.getName(), ItemStackBuilder.buildItem(itemMap));
     }
 
