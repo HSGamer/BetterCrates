@@ -106,4 +106,14 @@ public interface MessageConfig {
                 "&e&lChance: &f{chance}/{total-chance}"
         );
     }
+
+    @ConfigPath(value = "default-lines", converter = StringListConverter.class)
+    default List<String> getDefaultLines() {
+        return List.of(
+                "{display-name}",
+                "",
+                "&e&lLeft-click &fto preview",
+                "&e&lRight-click &fto open"
+        );
+    }
 }

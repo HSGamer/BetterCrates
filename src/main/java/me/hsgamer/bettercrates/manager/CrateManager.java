@@ -27,6 +27,7 @@ public class CrateManager {
     private final Map<String, Crate> crateMap = new HashMap<>();
     private final Map<String, CrateKey> crateKeyMap = new HashMap<>();
     private final Map<Location, CrateBlock> crateBlockMap = new HashMap<>();
+    private final BetterCrates plugin;
 
     public CrateManager(BetterCrates plugin) {
         crateFolder = new File(plugin.getDataFolder(), "crates");
@@ -39,6 +40,7 @@ public class CrateManager {
         }
         blockConfig = new BukkitConfig(plugin, "blocks.yml");
         blockConfig.setup();
+        this.plugin = plugin;
     }
 
     public void init() {
@@ -85,13 +87,14 @@ public class CrateManager {
         String id = file.getName();
         String crateDisplayName = id;
         ProbabilityCollection<Reward> rewards = new ProbabilityCollection<>();
-        List<String> lines = new ArrayList<>();
+        List<String> lines = new ArrayList<>(plugin.getMessageConfig().getDefaultLines());
         double offsetY = 1.5;
         CrateKey crateKey = null;
         for (String key : config.getKeys(false)) {
             if (key.equals("settings")) {
                 Map<String, Object> settings = config.getNormalizedValues(key, false);
                 if (settings.containsKey("lines")) {
+                    lines.clear();
                     lines.addAll(CollectionUtils.createStringListFromObject(settings.get("lines"), false));
                 }
                 if (settings.containsKey("key")) {
@@ -132,6 +135,8 @@ public class CrateManager {
             }
         }
         lines.replaceAll(MessageUtils::colorize);
+        String finalCrateDisplayName = crateDisplayName;
+        lines.replaceAll(s -> s.replace("{display-name}", finalCrateDisplayName));
         if (rewards.isEmpty()) {
             return Optional.empty();
         } else {
