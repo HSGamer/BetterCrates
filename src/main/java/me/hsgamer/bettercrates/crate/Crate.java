@@ -26,7 +26,7 @@ public class Crate {
     CrateKey crateKey;
 
     private static int getChestSize(int rawSize) {
-        return (rawSize / 9) + (rawSize % 9 == 0 ? 0 : 9);
+        return ((rawSize / 9) * 9) + (rawSize % 9 == 0 ? 0 : 9);
     }
 
     public Reward getRandomReward() {
