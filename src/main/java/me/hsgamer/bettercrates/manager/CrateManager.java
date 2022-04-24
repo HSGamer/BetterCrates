@@ -15,6 +15,7 @@ import me.hsgamer.hscore.common.CollectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.util.*;
@@ -108,10 +109,20 @@ public class CrateManager {
                 }
             } else {
                 Map<String, Object> reward = config.getNormalizedValues(key, false);
-                String rewardDisplayName = MessageUtils.colorize(reward.containsKey("display-name") ? String.valueOf(reward.get("display-name")) : key);
                 // noinspection unchecked
                 Map<String, Object> displayItemMap = reward.containsKey("display-item") ? (Map<String, Object>) reward.get("display-item") : Collections.emptyMap();
                 ItemStack displayItem = ItemStackBuilder.buildItem(displayItemMap);
+                String rewardDisplayName;
+                if (reward.containsKey("display-name")) {
+                    rewardDisplayName = MessageUtils.colorize(String.valueOf(reward.get("display-name")));
+                } else {
+                    ItemMeta meta = displayItem.getItemMeta();
+                    if (meta != null && meta.hasDisplayName()) {
+                        rewardDisplayName = meta.getDisplayName();
+                    } else {
+                        rewardDisplayName = key;
+                    }
+                }
                 int chance = reward.containsKey("chance") ? Integer.parseInt(String.valueOf(reward.get("chance"))) : 100;
                 int fakeChance = reward.containsKey("fake-chance") ? Integer.parseInt(String.valueOf(reward.get("fake-chance"))) : chance;
                 List<RewardContent> contents = new ArrayList<>();
