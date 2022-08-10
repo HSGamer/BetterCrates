@@ -14,6 +14,7 @@ import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -71,7 +72,7 @@ public class CrateManager {
         BukkitConfig config = new BukkitConfig(file);
         config.setup();
         Map<String, Object> itemMap = config.getNormalizedValues(false);
-        return new CrateKey(file.getName(), ItemStackBuilder.buildItem(itemMap));
+        return new CrateKey(file.getName(), ItemStackBuilder.INSTANCE.build(itemMap).orElse(new ItemStack(Material.STONE)));
     }
 
     private void loadCrates() {
@@ -111,7 +112,7 @@ public class CrateManager {
                 Map<String, Object> reward = config.getNormalizedValues(key, false);
                 // noinspection unchecked
                 Map<String, Object> displayItemMap = reward.containsKey("display-item") ? (Map<String, Object>) reward.get("display-item") : Collections.emptyMap();
-                ItemStack displayItem = ItemStackBuilder.buildItem(displayItemMap);
+                ItemStack displayItem = ItemStackBuilder.INSTANCE.build(displayItemMap).orElse(new ItemStack(Material.STONE));
                 String rewardDisplayName;
                 if (reward.containsKey("display-name")) {
                     rewardDisplayName = MessageUtils.colorize(String.valueOf(reward.get("display-name")));
@@ -132,15 +133,13 @@ public class CrateManager {
                         if (rawContent instanceof Map) {
                             // noinspection unchecked
                             Map<String, Object> contentMap = (Map<String, Object>) rawContent;
-                            RewardContent content = RewardContentBuilder.buildContent(contentMap);
-                            contents.add(content);
+                            RewardContentBuilder.INSTANCE.build(contentMap).ifPresent(contents::add);
                         }
                     }
                 } else if (rawContents instanceof Map) {
                     // noinspection unchecked
                     Map<String, Object> contentMap = (Map<String, Object>) rawContents;
-                    RewardContent content = RewardContentBuilder.buildContent(contentMap);
-                    contents.add(content);
+                    RewardContentBuilder.INSTANCE.build(contentMap).ifPresent(contents::add);
                 }
                 rewards.add(new Reward(key, rewardDisplayName, fakeChance, displayItem, contents), chance);
             }

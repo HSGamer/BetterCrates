@@ -17,6 +17,13 @@ public class CommandReward implements RewardContent {
     private static final Pattern COMMAND_PATTERN = Pattern.compile("\\[(\\w+)]\\W?(.*)");
     private final List<Command> commands = new ArrayList<>();
 
+    public CommandReward(Map<String, Object> map) {
+        if (map.containsKey("commands")) {
+            List<String> list = CollectionUtils.createStringListFromObject(map.get("commands"), true);
+            list.forEach(command -> this.commands.add(parse(command)));
+        }
+    }
+
     private static Command parse(String command) {
         Matcher matcher = COMMAND_PATTERN.matcher(command);
         if (matcher.find()) {
@@ -35,14 +42,6 @@ public class CommandReward implements RewardContent {
             }
         }
         return CommandType.PLAYER;
-    }
-
-    @Override
-    public void init(Map<String, Object> map) {
-        if (map.containsKey("commands")) {
-            List<String> list = CollectionUtils.createStringListFromObject(map.get("commands"), true);
-            list.forEach(command -> this.commands.add(parse(command)));
-        }
     }
 
     @Override

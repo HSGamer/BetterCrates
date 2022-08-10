@@ -1,7 +1,7 @@
 package me.hsgamer.bettercrates.builder;
 
 import fr.mrmicky.fastinv.ItemBuilder;
-import me.hsgamer.hscore.builder.Builder;
+import me.hsgamer.hscore.builder.MassBuilder;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
 import org.bukkit.Material;
@@ -10,11 +10,13 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static org.bukkit.enchantments.Enchantment.DURABILITY;
 
-public class ItemStackBuilder extends Builder<Map<String, Object>, ItemStack> {
+public class ItemStackBuilder extends MassBuilder<Map<String, Object>, ItemStack> {
     public static final ItemStackBuilder INSTANCE = new ItemStackBuilder();
 
     private ItemStackBuilder() {
@@ -61,10 +63,23 @@ public class ItemStackBuilder extends Builder<Map<String, Object>, ItemStack> {
         }, "simple");
     }
 
-    public static ItemStack buildItem(Map<String, Object> map) {
-        String type = String.valueOf(map.getOrDefault("item-type", "simple"));
-        return ItemStackBuilder.INSTANCE
-                .build(type, map)
-                .orElse(new ItemStack(Material.STONE));
+    public void register(Function<Map<String, Object>, ItemStack> creator, String... name) {
+        register(new Element<>() {
+            @Override
+            public boolean canBuild(Map<String, Object> input) {
+                String type = Objects.toString(input.get("item-type"), "");
+                for (String s : name) {
+                    if (s.equalsIgnoreCase(type)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public ItemStack build(Map<String, Object> input) {
+                return creator.apply(input);
+            }
+        });
     }
 }

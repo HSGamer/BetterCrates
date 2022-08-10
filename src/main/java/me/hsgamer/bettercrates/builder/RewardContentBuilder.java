@@ -1,29 +1,39 @@
 package me.hsgamer.bettercrates.builder;
 
-import me.hsgamer.bettercrates.BetterCrates;
 import me.hsgamer.bettercrates.api.reward.RewardContent;
 import me.hsgamer.bettercrates.reward.CommandReward;
 import me.hsgamer.bettercrates.reward.ItemReward;
-import me.hsgamer.hscore.builder.Builder;
-import org.bukkit.plugin.java.JavaPlugin;
+import me.hsgamer.hscore.builder.MassBuilder;
 
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.function.Function;
 
-public class RewardContentBuilder extends Builder<BetterCrates, RewardContent> {
+public class RewardContentBuilder extends MassBuilder<Map<String, Object>, RewardContent> {
     public static final RewardContentBuilder INSTANCE = new RewardContentBuilder();
 
     private RewardContentBuilder() {
-        register(p -> new CommandReward(), "command");
-        register(p -> new ItemReward(), "item");
+        register(CommandReward::new, "command", "");
+        register(ItemReward::new, "item");
     }
 
-    public static RewardContent buildContent(Map<String, Object> map) {
-        RewardContent rewardContent = Optional.ofNullable(map.get("content-type"))
-                .map(String::valueOf)
-                .flatMap(s -> INSTANCE.build(s, JavaPlugin.getPlugin(BetterCrates.class)))
-                .orElseGet(CommandReward::new);
-        rewardContent.init(map);
-        return rewardContent;
+    public void register(Function<Map<String, Object>, RewardContent> creator, String... name) {
+        register(new Element<>() {
+            @Override
+            public boolean canBuild(Map<String, Object> input) {
+                String type = Objects.toString(input.get("content-type"), "");
+                for (String s : name) {
+                    if (type.equalsIgnoreCase(s)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public RewardContent build(Map<String, Object> input) {
+                return creator.apply(input);
+            }
+        });
     }
 }

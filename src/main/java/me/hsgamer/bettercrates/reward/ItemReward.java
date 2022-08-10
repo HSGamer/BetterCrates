@@ -2,17 +2,17 @@ package me.hsgamer.bettercrates.reward;
 
 import me.hsgamer.bettercrates.api.reward.RewardContent;
 import me.hsgamer.bettercrates.builder.ItemStackBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
 public class ItemReward implements RewardContent {
-    private ItemStack item;
+    private final ItemStack item;
 
-    @Override
-    public void init(Map<String, Object> map) {
-        item = ItemStackBuilder.buildItem(map);
+    public ItemReward(Map<String, Object> map) {
+        item = ItemStackBuilder.INSTANCE.build(map).orElse(new ItemStack(Material.STONE));
     }
 
     @Override
