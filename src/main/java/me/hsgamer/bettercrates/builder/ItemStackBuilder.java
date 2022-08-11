@@ -62,7 +62,7 @@ public class ItemStackBuilder extends MassBuilder<Map.Entry<Map<String, Object>,
                         }
                     });
             return builder.build();
-        }, "simple");
+        }, "simple", "");
     }
 
     public void register(Function<Map.Entry<Map<String, Object>, StringReplacer>, ItemStack> creator, String... name) {
