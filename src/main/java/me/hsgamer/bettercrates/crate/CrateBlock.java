@@ -65,8 +65,7 @@ public class CrateBlock {
         if (currentTask.get() != null) {
             return CrateResponse.DELAYING;
         }
-        CrateKey key = crate.getCrateKey();
-        if (key != null && !key.checkAndTake(player)) {
+        if (!crate.checkAndTakeKey(player)) {
             return CrateResponse.NOT_AFFORD;
         }
 
@@ -75,7 +74,7 @@ public class CrateBlock {
         setBlockLid(true);
         Reward reward = crate.getRandomReward();
         hologram.setReward(reward);
-        MessageUtils.sendMessage(player, plugin.getMessageConfig().getRewardMessage(crate, reward));
+        MessageUtils.sendMessage(player, plugin.getMainConfig().getRewardMessage(crate, reward));
         reward.getContents().forEach(rewardType -> rewardType.reward(player));
 
         BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {

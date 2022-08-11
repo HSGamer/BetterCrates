@@ -37,10 +37,10 @@ public class InteractListener implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             switch (crateBlock.open(player)) {
                 case DELAYING:
-                    MessageUtils.sendMessage(player, plugin.getMessageConfig().getCrateDelaying());
+                    MessageUtils.sendMessage(player, plugin.getMainConfig().crateDelaying);
                     break;
                 case NOT_AFFORD:
-                    MessageUtils.sendMessage(player, plugin.getMessageConfig().getNotEnoughKey());
+                    MessageUtils.sendMessage(player, plugin.getMainConfig().notEnoughKey);
                     break;
                 default:
                     break;

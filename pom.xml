@@ -135,7 +135,7 @@
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
-            <artifactId>hscore-config-proxy</artifactId>
+            <artifactId>hscore-config-annotated</artifactId>
             <version>${core.version}</version>
         </dependency>
         <dependency>
@@ -151,6 +151,11 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>hscore-bukkit-utils</artifactId>
+            <version>${core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.hsgamer</groupId>
+            <artifactId>hscore-bukkit-key</artifactId>
             <version>${core.version}</version>
         </dependency>
 

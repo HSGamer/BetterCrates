@@ -3,31 +3,37 @@ package me.hsgamer.bettercrates;
 import fr.mrmicky.fastinv.FastInvManager;
 import me.hsgamer.bettercrates.command.GiveKeyCommand;
 import me.hsgamer.bettercrates.command.SetBlockCommand;
-import me.hsgamer.bettercrates.config.MessageConfig;
+import me.hsgamer.bettercrates.command.SetKeyCommand;
+import me.hsgamer.bettercrates.config.MainConfig;
 import me.hsgamer.bettercrates.hooks.Hooks;
 import me.hsgamer.bettercrates.listener.CrateListener;
 import me.hsgamer.bettercrates.listener.InteractListener;
 import me.hsgamer.bettercrates.manager.CrateManager;
 import me.hsgamer.hscore.bukkit.baseplugin.BasePlugin;
-import me.hsgamer.hscore.bukkit.config.BukkitConfig;
+import me.hsgamer.hscore.bukkit.key.PluginKeyManager;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
-import me.hsgamer.hscore.config.proxy.ConfigGenerator;
 
 public final class BetterCrates extends BasePlugin {
     private final CrateManager crateManager = new CrateManager(this);
-    private final MessageConfig messageConfig = ConfigGenerator.newInstance(MessageConfig.class, new BukkitConfig(this, "message.yml"));
+    private final PluginKeyManager keyManager = new PluginKeyManager(this);
+    private final MainConfig mainConfig = new MainConfig(this);
+
+    @Override
+    public void load() {
+        mainConfig.setup();
+    }
 
     @Override
     public void enable() {
-        MessageUtils.setPrefix(messageConfig::getPrefix);
+        MessageUtils.setPrefix(() -> mainConfig.prefix);
         Permissions.register();
 
         FastInvManager.register(this);
         registerListener(new CrateListener(this));
         registerListener(new InteractListener(this));
         registerCommand(new GiveKeyCommand(this));
+        registerCommand(new SetKeyCommand(this));
         registerCommand(new SetBlockCommand(this));
-
         Hooks.register();
     }
 
@@ -46,7 +52,11 @@ public final class BetterCrates extends BasePlugin {
         return crateManager;
     }
 
-    public MessageConfig getMessageConfig() {
-        return messageConfig;
+    public PluginKeyManager getKeyManager() {
+        return keyManager;
+    }
+
+    public MainConfig getMainConfig() {
+        return mainConfig;
     }
 }

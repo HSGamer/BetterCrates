@@ -13,8 +13,8 @@ public final class Hooks {
 
     public static void register() {
         if (Bukkit.getPluginManager().isPluginEnabled("ItemBridge")) {
-            ItemStackBuilder.INSTANCE.register(map ->
-                            Optional.ofNullable(map.get("itembridge"))
+            ItemStackBuilder.INSTANCE.register(entry ->
+                            Optional.ofNullable(entry.getKey().get("itembridge"))
                                     .map(String::valueOf)
                                     .map(ItemBridge::getItemStack)
                                     .orElse(null),

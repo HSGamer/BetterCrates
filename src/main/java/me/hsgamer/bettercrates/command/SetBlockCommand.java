@@ -36,24 +36,24 @@ public class SetBlockCommand extends Command {
         }
 
         if (!(sender instanceof Player)) {
-            MessageUtils.sendMessage(sender, plugin.getMessageConfig().getPlayerOnly());
+            MessageUtils.sendMessage(sender, plugin.getMainConfig().playerOnly);
             return false;
         }
         Player player = (Player) sender;
 
         Block targetBlock = player.getTargetBlockExact(5, FluidCollisionMode.NEVER);
         if (targetBlock == null || targetBlock.getType().isAir()) {
-            MessageUtils.sendMessage(sender, plugin.getMessageConfig().getBlockRequired());
+            MessageUtils.sendMessage(sender, plugin.getMainConfig().blockRequired);
             return false;
         }
         if (plugin.getCrateManager().getCrateBlock(targetBlock.getLocation()).isPresent()) {
-            MessageUtils.sendMessage(sender, plugin.getMessageConfig().getBlockAlreadySet());
+            MessageUtils.sendMessage(sender, plugin.getMainConfig().blockAlreadySet);
             return false;
         }
 
         Optional<Crate> optionalCrate = plugin.getCrateManager().getCrate(args[0]);
         if (optionalCrate.isEmpty()) {
-            MessageUtils.sendMessage(sender, plugin.getMessageConfig().getCrateNotFound());
+            MessageUtils.sendMessage(sender, plugin.getMainConfig().crateNotFound);
             return false;
         }
         Crate crate = optionalCrate.get();
@@ -68,7 +68,7 @@ public class SetBlockCommand extends Command {
         }
 
         plugin.getCrateManager().addCrateBlock(targetBlock.getLocation(), crate, delay);
-        MessageUtils.sendMessage(sender, plugin.getMessageConfig().getSetBlockSuccess());
+        MessageUtils.sendMessage(sender, plugin.getMainConfig().setBlockSuccess);
         return true;
     }
 
