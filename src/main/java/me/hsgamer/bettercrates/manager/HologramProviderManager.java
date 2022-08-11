@@ -1,10 +1,12 @@
 package me.hsgamer.bettercrates.manager;
 
+import lombok.experimental.UtilityClass;
 import me.hsgamer.bettercrates.api.hologram.HologramProvider;
 import me.hsgamer.bettercrates.hologram.dh.DHHologramProvider;
 import me.hsgamer.bettercrates.hologram.none.NoneHologramProvider;
 import org.bukkit.Bukkit;
 
+@UtilityClass
 public final class HologramProviderManager {
     private static final HologramProvider hologramProvider;
 
@@ -14,10 +16,6 @@ public final class HologramProviderManager {
         } else {
             hologramProvider = new NoneHologramProvider();
         }
-    }
-
-    private HologramProviderManager() {
-        throw new IllegalStateException("Utility class");
     }
 
     public static HologramProvider getHologramProvider() {
