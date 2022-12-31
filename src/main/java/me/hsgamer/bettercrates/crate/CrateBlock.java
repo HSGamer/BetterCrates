@@ -2,9 +2,11 @@ package me.hsgamer.bettercrates.crate;
 
 import lombok.Getter;
 import me.hsgamer.bettercrates.BetterCrates;
-import me.hsgamer.bettercrates.api.hologram.Hologram;
 import me.hsgamer.bettercrates.manager.HologramProviderManager;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
+import me.hsgamer.unihologram.common.api.Hologram;
+import me.hsgamer.unihologram.common.line.TextHologramLine;
+import me.hsgamer.unihologram.spigot.common.line.ItemHologramLine;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -13,7 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Arrays;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class CrateBlock {
     private final Location location;
@@ -22,14 +27,14 @@ public class CrateBlock {
     @Getter
     private final long delay;
     @Getter
-    private final Hologram hologram;
+    private final Hologram<Location> hologram;
     private final AtomicReference<BukkitTask> currentTask = new AtomicReference<>();
 
     public CrateBlock(Location location, Crate crate, long delay) {
         this.location = location;
         this.crate = crate;
         this.delay = delay;
-        hologram = HologramProviderManager.getHologramProvider().createHologram(this);
+        hologram = HologramProviderManager.getHologramProvider().createHologram(crate.getId() + "-" + UUID.randomUUID(), location);
     }
 
     public void init() {
@@ -73,13 +78,16 @@ public class CrateBlock {
 
         setBlockLid(true);
         Reward reward = crate.getRandomReward();
-        hologram.setReward(reward);
+        hologram.setLines(Arrays.asList(
+                new TextHologramLine(reward.getDisplayName()),
+                new ItemHologramLine(reward.getDisplayItem())
+        ));
         MessageUtils.sendMessage(player, plugin.getMainConfig().getRewardMessage(crate, reward));
         reward.getContents().forEach(rewardType -> rewardType.reward(player));
 
         BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             setBlockLid(false);
-            hologram.reset();
+            hologram.setLines(crate.getLines().stream().map(TextHologramLine::new).collect(Collectors.toList()));
             currentTask.lazySet(null);
         }, delay);
         currentTask.set(task);
