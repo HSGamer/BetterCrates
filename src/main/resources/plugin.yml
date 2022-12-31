@@ -6,3 +6,4 @@ authors: [ HSGamer ]
 softdepend:
   - ItemBridge
   - DecentHolograms
+  - HolographicDisplays
