@@ -148,7 +148,7 @@ public class CrateManager {
             }
         }
         for (RawCrateBlock rawCrateBlock : rawCrateBlocks) {
-            if (!rawCrateBlock.isValid()) return;
+            if (!rawCrateBlock.isValid()) continue;
             Crate crate = crateMap.get(rawCrateBlock.getCrateId());
             if (crate != null) {
                 Location location = rawCrateBlock.getLocation();
