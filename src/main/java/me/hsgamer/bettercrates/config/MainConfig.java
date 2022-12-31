@@ -34,6 +34,8 @@ public class MainConfig extends AnnotatedConfig {
 
     public final @ConfigPath("preview.title") String previewTitle;
     public final @ConfigPath(value = "preview.lore-template", converter = StringListConverter.class) List<String> previewLoreTemplate;
+    public final @ConfigPath(value = "preview.previous-item", converter = StringObjectMapConverter.class) Map<String, Object> previewPreviousItem;
+    public final @ConfigPath(value = "preview.next-item", converter = StringObjectMapConverter.class) Map<String, Object> previewNextItem;
 
     public final @ConfigPath(value = "crate.default-lines", converter = StringListConverter.class) List<String> crateDefaultLines;
     public final @ConfigPath(value = "crate.key-item", converter = StringObjectMapConverter.class) Map<String, Object> crateKeyItem;
@@ -59,6 +61,14 @@ public class MainConfig extends AnnotatedConfig {
                 "{lore}",
                 "",
                 "&e&lChance: &f{chance}/{total-chance}"
+        );
+        previewPreviousItem = Map.of(
+                "material", "ARROW",
+                "name", "&e&lPrevious Page"
+        );
+        previewNextItem = Map.of(
+                "material", "ARROW",
+                "name", "&e&lNext Page"
         );
 
         crateDefaultLines = List.of(
@@ -114,5 +124,13 @@ public class MainConfig extends AnnotatedConfig {
 
     public String getPreviewTitle(Crate crate) {
         return previewTitle.replace("{name}", crate.getDisplayName());
+    }
+
+    public ItemStack getPreviewPreviousItem() {
+        return ItemStackBuilder.INSTANCE.build(previewPreviousItem).orElse(new ItemStack(Material.ARROW));
+    }
+
+    public ItemStack getPreviewNextItem() {
+        return ItemStackBuilder.INSTANCE.build(previewNextItem).orElse(new ItemStack(Material.ARROW));
     }
 }
