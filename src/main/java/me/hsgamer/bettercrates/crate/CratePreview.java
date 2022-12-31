@@ -78,11 +78,12 @@ public class CratePreview extends FastInv {
         });
         setItem(INV_SIZE - 1, plugin.getMainConfig().getPreviewNextItem(), e -> {
             int page = currentPage.get();
-            if (page < maxPage) {
+            if (page < maxPage - 1) {
                 currentPage.set(page + 1);
                 update();
             }
         });
+        setItems(INV_SIZE - 8, INV_SIZE - 2, plugin.getMainConfig().getPreviewFillItem());
     }
 
     private void update() {
