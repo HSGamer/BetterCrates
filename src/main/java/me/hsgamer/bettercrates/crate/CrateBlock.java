@@ -36,7 +36,7 @@ public class CrateBlock {
         this.delay = delay;
         hologram = HologramProviderManager.getHologramProvider().createHologram(
                 crate.getId() + "-" + UUID.randomUUID(),
-                location.add(0.5, crate.getOffSetY(), 0.5)
+                location.clone().add(0.5, crate.getOffSetY(), 0.5)
         );
     }
 
@@ -97,10 +97,6 @@ public class CrateBlock {
         currentTask.set(task);
 
         return CrateResponse.SUCCESS;
-    }
-
-    public Location getLocation() {
-        return location.clone();
     }
 
     public RawCrateBlock toRaw() {
