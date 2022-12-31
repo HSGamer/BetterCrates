@@ -39,6 +39,7 @@ public class CrateBlock {
 
     public void init() {
         hologram.init();
+        hologram.setLines(crate.getLines().stream().map(TextHologramLine::new).collect(Collectors.toList()));
     }
 
     public void clear() {
