@@ -90,4 +90,8 @@ public class CrateBlock {
     public Location getLocation() {
         return location.clone();
     }
+
+    public RawCrateBlock toRaw() {
+        return new RawCrateBlock(location, crate.getId(), delay);
+    }
 }

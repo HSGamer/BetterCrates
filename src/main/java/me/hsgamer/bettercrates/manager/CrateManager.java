@@ -7,12 +7,12 @@ import me.hsgamer.bettercrates.builder.ItemStackBuilder;
 import me.hsgamer.bettercrates.builder.RewardContentBuilder;
 import me.hsgamer.bettercrates.crate.Crate;
 import me.hsgamer.bettercrates.crate.CrateBlock;
+import me.hsgamer.bettercrates.crate.RawCrateBlock;
 import me.hsgamer.bettercrates.crate.Reward;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.hscore.bukkit.key.PluginKeyPair;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +21,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CrateManager {
     private final File crateFolder;
@@ -47,7 +46,7 @@ public class CrateManager {
     }
 
     public void clear() {
-        crateBlockMap.values().forEach(CrateBlock::init);
+        crateBlockMap.values().forEach(CrateBlock::clear);
         crateBlockMap.clear();
         crateMap.clear();
     }
@@ -137,24 +136,35 @@ public class CrateManager {
 
     private void loadCrateBlocks() {
         blockConfig.reload();
-        List<String> blockIds = CollectionUtils.createStringListFromObject(blockConfig.get("blocks"), true);
-        for (String string : blockIds) {
-            String[] split = string.split(",", 6);
-            if (split.length == 6) {
-                Location location = new Location(Bukkit.getWorld(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
-                if (location.getBlock().getType().isAir()) continue;
-                Crate crate = crateMap.get(split[4]);
-                if (crate != null) {
-                    int delay = Integer.parseInt(split[5]);
-                    crateBlockMap.put(location, new CrateBlock(location, crate, delay));
-                }
+        List<RawCrateBlock> rawCrateBlocks = new ArrayList<>();
+        Object blocksObject = blockConfig.get("blocks");
+        if (blocksObject instanceof List) {
+            List<?> blocks = (List<?>) blocksObject;
+            for (Object rawBlock : blocks) {
+                if (!(rawBlock instanceof Map)) continue;
+                Map<String, Object> blockMap = new HashMap<>();
+                ((Map<?, ?>) rawBlock).forEach((key, value) -> blockMap.put(Objects.toString(key), value));
+                rawCrateBlocks.add(RawCrateBlock.deserialize(blockMap));
+            }
+        }
+        for (RawCrateBlock rawCrateBlock : rawCrateBlocks) {
+            if (!rawCrateBlock.isValid()) return;
+            Crate crate = crateMap.get(rawCrateBlock.getCrateId());
+            if (crate != null) {
+                Location location = rawCrateBlock.getLocation();
+                CrateBlock crateBlock = new CrateBlock(location, crate, rawCrateBlock.getDelay());
+                crateBlockMap.put(location, crateBlock);
             }
         }
         saveCrateBlocks();
     }
 
     private void saveCrateBlocks() {
-        blockConfig.set("blocks", crateBlockMap.values().stream().map(crateBlock -> Objects.requireNonNull(crateBlock.getLocation().getWorld()).getName() + "," + crateBlock.getLocation().getBlockX() + "," + crateBlock.getLocation().getBlockY() + "," + crateBlock.getLocation().getBlockZ() + "," + crateBlock.getCrate().getId() + "," + crateBlock.getDelay()).collect(Collectors.toList()));
+        List<Map<String, Object>> blocks = new ArrayList<>();
+        for (CrateBlock crateBlock : crateBlockMap.values()) {
+            blocks.add(crateBlock.toRaw().serialize());
+        }
+        blockConfig.set("blocks", blocks);
         blockConfig.save();
     }
 
