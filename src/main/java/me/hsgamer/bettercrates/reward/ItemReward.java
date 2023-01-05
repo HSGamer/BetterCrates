@@ -1,6 +1,6 @@
 package me.hsgamer.bettercrates.reward;
 
-import me.hsgamer.bettercrates.api.reward.RewardContent;
+import me.hsgamer.bettercrates.api.RewardContent;
 import me.hsgamer.bettercrates.builder.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

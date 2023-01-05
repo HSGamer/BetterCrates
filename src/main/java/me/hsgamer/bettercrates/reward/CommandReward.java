@@ -1,6 +1,6 @@
 package me.hsgamer.bettercrates.reward;
 
-import me.hsgamer.bettercrates.api.reward.RewardContent;
+import me.hsgamer.bettercrates.api.RewardContent;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
 import org.bukkit.Bukkit;

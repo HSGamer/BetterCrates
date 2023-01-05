@@ -2,7 +2,7 @@ package me.hsgamer.bettercrates.manager;
 
 import com.lewdev.probabilitylib.ProbabilityCollection;
 import me.hsgamer.bettercrates.BetterCrates;
-import me.hsgamer.bettercrates.api.reward.RewardContent;
+import me.hsgamer.bettercrates.api.RewardContent;
 import me.hsgamer.bettercrates.builder.ItemStackBuilder;
 import me.hsgamer.bettercrates.builder.RewardContentBuilder;
 import me.hsgamer.bettercrates.crate.Crate;

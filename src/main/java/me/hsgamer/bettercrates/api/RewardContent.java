@@ -1,4 +1,4 @@
-package me.hsgamer.bettercrates.api.reward;
+package me.hsgamer.bettercrates.api;
 
 import org.bukkit.entity.Player;
 

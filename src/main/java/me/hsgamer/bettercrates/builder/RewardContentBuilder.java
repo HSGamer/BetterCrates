@@ -1,6 +1,6 @@
 package me.hsgamer.bettercrates.builder;
 
-import me.hsgamer.bettercrates.api.reward.RewardContent;
+import me.hsgamer.bettercrates.api.RewardContent;
 import me.hsgamer.bettercrates.reward.CommandReward;
 import me.hsgamer.bettercrates.reward.ItemReward;
 import me.hsgamer.hscore.builder.MassBuilder;

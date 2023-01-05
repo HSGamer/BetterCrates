@@ -1,7 +1,7 @@
 package me.hsgamer.bettercrates.crate;
 
 import lombok.Value;
-import me.hsgamer.bettercrates.api.reward.RewardContent;
+import me.hsgamer.bettercrates.api.RewardContent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
