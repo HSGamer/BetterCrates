@@ -64,15 +64,15 @@ public class MainConfig extends AnnotatedConfig {
                 "&e&lChance: &f{chance}/{total-chance}"
         );
         previewPreviousItem = Map.of(
-                "material", "ARROW",
+                "material", Material.ARROW.name(),
                 "name", "&e&lPrevious Page"
         );
         previewNextItem = Map.of(
-                "material", "ARROW",
+                "material", Material.ARROW.name(),
                 "name", "&e&lNext Page"
         );
         previewFillItem = Map.of(
-                "material", "AIR"
+                "material", Material.BLACK_STAINED_GLASS_PANE.name()
         );
 
         crateDefaultLines = List.of(
