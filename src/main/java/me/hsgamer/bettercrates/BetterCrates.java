@@ -12,6 +12,8 @@ import me.hsgamer.bettercrates.manager.CrateManager;
 import me.hsgamer.hscore.bukkit.baseplugin.BasePlugin;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 
+import java.util.List;
+
 @Getter
 public final class BetterCrates extends BasePlugin {
     private final CrateManager crateManager = new CrateManager(this);
@@ -25,7 +27,6 @@ public final class BetterCrates extends BasePlugin {
     @Override
     public void enable() {
         MessageUtils.setPrefix(() -> mainConfig.prefix);
-        Permissions.register();
 
         FastInvManager.register(this);
         registerListener(new CrateListener(this));
@@ -43,6 +44,10 @@ public final class BetterCrates extends BasePlugin {
     @Override
     public void disable() {
         crateManager.clear();
-        Permissions.unregister();
+    }
+
+    @Override
+    protected List<Class<?>> getPermissionClasses() {
+        return List.of(Permissions.class);
     }
 }

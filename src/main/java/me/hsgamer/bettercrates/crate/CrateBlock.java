@@ -3,14 +3,13 @@ package me.hsgamer.bettercrates.crate;
 import lombok.Getter;
 import me.hsgamer.bettercrates.BetterCrates;
 import me.hsgamer.bettercrates.manager.HologramProviderManager;
+import me.hsgamer.bettercrates.opener.ChestOpener;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.unihologram.common.api.Hologram;
 import me.hsgamer.unihologram.common.line.TextHologramLine;
 import me.hsgamer.unihologram.spigot.common.line.ItemHologramLine;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Lidded;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -59,15 +58,7 @@ public class CrateBlock {
     }
 
     private void setBlockLid(boolean open) {
-        BlockState blockState = location.getBlock().getState();
-        if (blockState instanceof Lidded) {
-            if (open) {
-                ((Lidded) blockState).open();
-            } else {
-                ((Lidded) blockState).close();
-            }
-            blockState.update(true, false);
-        }
+        ChestOpener.INSTANCE.setBlockLid(location.getBlock(), open);
     }
 
     public CrateResponse open(Player player) {
