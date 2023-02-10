@@ -1,10 +1,12 @@
 package me.hsgamer.bettercrates.builder;
 
+import com.google.gson.Gson;
 import fr.mrmicky.fastinv.ItemBuilder;
 import me.hsgamer.hscore.builder.MassBuilder;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
 import me.hsgamer.hscore.common.interfaces.StringReplacer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -15,13 +17,31 @@ import java.util.function.Function;
 import static org.bukkit.enchantments.Enchantment.DURABILITY;
 
 public class ItemStackBuilder extends MassBuilder<Map.Entry<Map<String, Object>, StringReplacer>, ItemStack> {
+    private static final Gson GSON = new Gson();
     public static final ItemStackBuilder INSTANCE = new ItemStackBuilder();
 
     private ItemStackBuilder() {
         register(entry -> {
             Map<String, Object> map = entry.getKey();
             StringReplacer replacer = entry.getValue();
-            ItemBuilder builder = new ItemBuilder(Optional.ofNullable(map.get("material")).map(String::valueOf).map(Material::getMaterial).orElse(Material.STONE));
+            Material material = Optional.ofNullable(map.get("material")).map(String::valueOf).map(Material::getMaterial).orElse(Material.STONE);
+            ItemStack itemStack = new ItemStack(material);
+            Optional<String> nbtOptional = Optional.ofNullable(map.get("nbt")).map(o -> {
+                if (o instanceof Map) {
+                    Map<?, ?> nbtMap = (Map<?, ?>) o;
+                    return GSON.toJson(nbtMap);
+                } else {
+                    return Objects.toString(o, null);
+                }
+            }).map(replacer::replace);
+            if (nbtOptional.isPresent()) {
+                try {
+                    itemStack = Bukkit.getUnsafe().modifyItemStack(itemStack, nbtOptional.get());
+                } catch (Exception e) {
+                    // EMPTY
+                }
+            }
+            ItemBuilder builder = new ItemBuilder(itemStack);
             builder.amount(Optional.ofNullable(map.get("amount")).map(String::valueOf).map(Integer::valueOf).orElse(1));
             Optional.ofNullable(map.get("name"))
                     .map(String::valueOf)
