@@ -10,14 +10,12 @@ import me.hsgamer.bettercrates.crate.CrateBlock;
 import me.hsgamer.bettercrates.crate.RawCrateBlock;
 import me.hsgamer.bettercrates.crate.Reward;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
-import me.hsgamer.hscore.bukkit.key.PluginKeyPair;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
 import java.util.*;
@@ -67,7 +65,7 @@ public class CrateManager {
         ProbabilityCollection<Reward> rewards = new ProbabilityCollection<>();
         List<String> lines = new ArrayList<>(plugin.getMainConfig().crateDefaultLines);
         double offsetY = 2.3;
-        PluginKeyPair<Byte> crateKey = null;
+        ItemStack crateKey = null;
         int crateKeyAmount = 1;
         for (String key : config.getKeys(false)) {
             if (key.equals("settings")) {
@@ -83,7 +81,13 @@ public class CrateManager {
                     crateDisplayName = MessageUtils.colorize(String.valueOf(settings.get("display-name")));
                 }
                 if (Boolean.parseBoolean(Objects.toString(settings.get("use-crate-key")))) {
-                    crateKey = plugin.getKeyManager().createKeyPair(id, PersistentDataType.BYTE, (byte) 0);
+                    if (settings.containsKey("crate-key")) {
+                        // noinspection unchecked
+                        Map<String, Object> crateKeyMap = (Map<String, Object>) settings.get("crate-key");
+                        crateKey = ItemStackBuilder.INSTANCE.build(crateKeyMap).orElse(null);
+                    } else {
+                        crateKey = plugin.getMainConfig().getCrateKey(id, crateDisplayName);
+                    }
                 }
                 if (settings.containsKey("crate-key-amount")) {
                     crateKeyAmount = Integer.parseInt(String.valueOf(settings.get("crate-key-amount")));

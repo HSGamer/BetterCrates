@@ -156,11 +156,6 @@
             <artifactId>hscore-bukkit-utils</artifactId>
             <version>${core.version}</version>
         </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>hscore-bukkit-key</artifactId>
-            <version>${core.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.lewdev</groupId>

@@ -97,16 +97,14 @@ public class MainConfig extends AnnotatedConfig {
                 .replace("{reward}", reward.getDisplayName());
     }
 
-    public ItemStack getCrateKey(Crate crate) {
-        ItemStack key = ItemStackBuilder.INSTANCE
+    public ItemStack getCrateKey(String crateId, String displayName) {
+        return ItemStackBuilder.INSTANCE
                 .build(crateKeyItem,
                         (original, uuid) -> original
-                                .replace("{crate}", crate.getDisplayName())
-                                .replace("{crate-id}", crate.getId())
+                                .replace("{crate}", crateId)
+                                .replace("{crate-id}", displayName)
                 )
                 .orElse(new ItemStack(Material.STONE));
-        crate.setCrateKey(key);
-        return key;
     }
 
     public String getSetKeySuccess(Crate crate) {

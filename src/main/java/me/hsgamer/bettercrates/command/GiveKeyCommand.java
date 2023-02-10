@@ -41,7 +41,7 @@ public class GiveKeyCommand extends Command {
             return false;
         }
         Crate crate = optionalCrate.get();
-        ItemStack itemStack = plugin.getMainConfig().getCrateKey(crate);
+        ItemStack itemStack = crate.getCrateKey();
 
         Player player = plugin.getServer().getPlayer(args[1]);
         if (player == null) {
