@@ -1,5 +1,6 @@
 package me.hsgamer.bettercrates.config;
 
+import com.google.common.reflect.TypeToken;
 import me.hsgamer.bettercrates.builder.ItemStackBuilder;
 import me.hsgamer.bettercrates.config.converter.StringListConverter;
 import me.hsgamer.bettercrates.config.converter.StringObjectMapConverter;
@@ -8,6 +9,7 @@ import me.hsgamer.bettercrates.crate.Reward;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.hscore.config.annotated.AnnotatedConfig;
 import me.hsgamer.hscore.config.annotation.ConfigPath;
+import me.hsgamer.hscore.config.annotation.converter.manager.DefaultConverterManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 public class MainConfig extends AnnotatedConfig {
+    static {
+        //noinspection UnstableApiUsage
+        DefaultConverterManager.registerConverter(new TypeToken<List<String>>() {
+        }.getType(), new StringListConverter());
+        //noinspection UnstableApiUsage
+        DefaultConverterManager.registerConverter(new TypeToken<Map<String, Object>>() {
+        }.getType(), new StringObjectMapConverter());
+    }
+
     public final @ConfigPath("message.prefix") String prefix;
     public final @ConfigPath("message.player-only") String playerOnly;
     public final @ConfigPath("message.crate-not-found") String crateNotFound;
@@ -28,18 +39,14 @@ public class MainConfig extends AnnotatedConfig {
     public final @ConfigPath("message.crate-delaying") String crateDelaying;
     public final @ConfigPath("message.reward") String rewardMessage;
     public final @ConfigPath("message.give-key-success") String giveKeySuccess;
-    public final @ConfigPath("message.set-key-success") String setKeySuccess;
-    public final @ConfigPath("message.set-key-fail") String setKeyFail;
     public final @ConfigPath("message.set-block-success") String setBlockSuccess;
-
     public final @ConfigPath("preview.title") String previewTitle;
-    public final @ConfigPath(value = "preview.lore-template", converter = StringListConverter.class) List<String> previewLoreTemplate;
-    public final @ConfigPath(value = "preview.previous-item", converter = StringObjectMapConverter.class) Map<String, Object> previewPreviousItem;
-    public final @ConfigPath(value = "preview.next-item", converter = StringObjectMapConverter.class) Map<String, Object> previewNextItem;
-    public final @ConfigPath(value = "preview.fill-item", converter = StringObjectMapConverter.class) Map<String, Object> previewFillItem;
-
-    public final @ConfigPath(value = "crate.default-lines", converter = StringListConverter.class) List<String> crateDefaultLines;
-    public final @ConfigPath(value = "crate.key-item", converter = StringObjectMapConverter.class) Map<String, Object> crateKeyItem;
+    public final @ConfigPath("preview.lore-template") List<String> previewLoreTemplate;
+    public final @ConfigPath("preview.previous-item") Map<String, Object> previewPreviousItem;
+    public final @ConfigPath("preview.next-item") Map<String, Object> previewNextItem;
+    public final @ConfigPath("preview.fill-item") Map<String, Object> previewFillItem;
+    public final @ConfigPath("crate.default-lines") List<String> crateDefaultLines;
+    public final @ConfigPath("crate.key-item") Map<String, Object> crateKeyItem;
 
     public MainConfig(Plugin plugin) {
         super(new BukkitConfig(plugin, "config.yml"));
@@ -53,8 +60,6 @@ public class MainConfig extends AnnotatedConfig {
         crateDelaying = "&cCrate is being used by another player";
         rewardMessage = "&aYou have opened {crate} and received {reward}";
         giveKeySuccess = "&aYou have given {player} {amount} {name}";
-        setKeySuccess = "&aYou have set the item in your hand as the key for {crate}";
-        setKeyFail = "&cThe item in your hand is not valid as a key for {crate}";
         setBlockSuccess = "&aYou have set the block to be a crate block";
 
         previewTitle = "&4&lPreview Crate {name}";
@@ -105,14 +110,6 @@ public class MainConfig extends AnnotatedConfig {
                                 .replace("{crate-id}", displayName)
                 )
                 .orElse(new ItemStack(Material.STONE));
-    }
-
-    public String getSetKeySuccess(Crate crate) {
-        return this.setKeySuccess.replace("{crate}", crate.getDisplayName());
-    }
-
-    public String getSetKeyFail(Crate crate) {
-        return this.setKeyFail.replace("{crate}", crate.getDisplayName());
     }
 
     public String getGiveKeySuccess(Player player, ItemStack itemStack) {

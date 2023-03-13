@@ -17,8 +17,8 @@ import java.util.function.Function;
 import static org.bukkit.enchantments.Enchantment.DURABILITY;
 
 public class ItemStackBuilder extends MassBuilder<Map.Entry<Map<String, Object>, StringReplacer>, ItemStack> {
-    private static final Gson GSON = new Gson();
     public static final ItemStackBuilder INSTANCE = new ItemStackBuilder();
+    private static final Gson GSON = new Gson();
 
     private ItemStackBuilder() {
         register(entry -> {
