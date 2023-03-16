@@ -6,8 +6,8 @@ import me.hsgamer.bettercrates.opener.ChestOpener;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.unihologram.common.api.Hologram;
 import me.hsgamer.unihologram.common.line.TextHologramLine;
+import me.hsgamer.unihologram.spigot.SpigotHologramProvider;
 import me.hsgamer.unihologram.spigot.common.line.ItemHologramLine;
-import me.hsgamer.unihologram.spigot.plugin.UniHologramPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class CrateBlock {
+    private static SpigotHologramProvider hologramProvider;
     private final Location location;
     @Getter
     private final Crate crate;
@@ -33,10 +34,17 @@ public class CrateBlock {
         this.location = location;
         this.crate = crate;
         this.delay = delay;
-        hologram = JavaPlugin.getPlugin(UniHologramPlugin.class).getProvider().createHologram(
+        hologram = getHologramProvider().createHologram(
                 crate.getId() + "-" + UUID.randomUUID(),
                 location.clone().add(0.5, crate.getOffSetY(), 0.5)
         );
+    }
+
+    private static SpigotHologramProvider getHologramProvider() {
+        if (hologramProvider == null) {
+            hologramProvider = new SpigotHologramProvider();
+        }
+        return hologramProvider;
     }
 
     public void init() {
