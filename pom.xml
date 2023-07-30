@@ -13,7 +13,9 @@
 
     <properties>
         <java.version>11</java.version>
-        <core.version>4.2.6</core.version>
+        <core.version>4.3.10</core.version>
+        <lombok.version>1.18.24</lombok.version>
+        <unihologram.version>2.2.0</unihologram.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -31,7 +33,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.24</version>
+                            <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -109,7 +111,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -123,8 +125,24 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>uni-hologram-spigot-bundle</artifactId>
-            <version>1.5.3</version>
+            <version>${unihologram.version}</version>
         </dependency>
+        <dependency>
+            <groupId>me.hsgamer</groupId>
+            <artifactId>uni-hologram-spigot-vanilla</artifactId>
+            <version>${unihologram.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.hsgamer</groupId>
+            <artifactId>uni-hologram-spigot-holographicdisplays</artifactId>
+            <version>${unihologram.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.hsgamer</groupId>
+            <artifactId>uni-hologram-spigot-decentholograms</artifactId>
+            <version>${unihologram.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>hscore-builder</artifactId>
@@ -164,7 +182,7 @@
         <dependency>
             <groupId>fr.mrmicky</groupId>
             <artifactId>FastInv</artifactId>
-            <version>48b51eed63</version>
+            <version>3.0.4</version>
         </dependency>
     </dependencies>
 </project>
