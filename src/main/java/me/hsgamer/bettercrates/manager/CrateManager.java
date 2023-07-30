@@ -10,8 +10,9 @@ import me.hsgamer.bettercrates.crate.CrateBlock;
 import me.hsgamer.bettercrates.crate.RawCrateBlock;
 import me.hsgamer.bettercrates.crate.Reward;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
-import me.hsgamer.hscore.bukkit.utils.MessageUtils;
+import me.hsgamer.hscore.bukkit.utils.ColorUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
+import me.hsgamer.hscore.config.PathString;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -67,9 +68,9 @@ public class CrateManager {
         double offsetY = 2.3;
         ItemStack crateKey = null;
         int crateKeyAmount = 1;
-        for (String key : config.getKeys(false)) {
+        for (PathString key : config.getKeys(false)) {
             if (key.equals("settings")) {
-                Map<String, Object> settings = config.getNormalizedValues(key, false);
+                Map<String, Object> settings = PathString.toPathMap(".", config.getNormalizedValues(key, false));
                 if (settings.containsKey("lines")) {
                     lines.clear();
                     lines.addAll(CollectionUtils.createStringListFromObject(settings.get("lines"), false));
@@ -78,7 +79,7 @@ public class CrateManager {
                     offsetY = Double.parseDouble(String.valueOf(settings.get("offset-y")));
                 }
                 if (settings.containsKey("display-name")) {
-                    crateDisplayName = MessageUtils.colorize(String.valueOf(settings.get("display-name")));
+                    crateDisplayName = ColorUtils.colorize(String.valueOf(settings.get("display-name")));
                 }
                 if (Boolean.parseBoolean(Objects.toString(settings.get("use-crate-key")))) {
                     if (settings.containsKey("crate-key")) {
@@ -93,19 +94,19 @@ public class CrateManager {
                     crateKeyAmount = Integer.parseInt(String.valueOf(settings.get("crate-key-amount")));
                 }
             } else {
-                Map<String, Object> reward = config.getNormalizedValues(key, false);
+                Map<String, Object> reward = PathString.toPathMap(".", config.getNormalizedValues(key, false));
                 // noinspection unchecked
                 Map<String, Object> displayItemMap = reward.containsKey("display-item") ? (Map<String, Object>) reward.get("display-item") : Collections.emptyMap();
                 ItemStack displayItem = ItemStackBuilder.INSTANCE.build(displayItemMap).orElse(new ItemStack(Material.STONE));
                 String rewardDisplayName;
                 if (reward.containsKey("display-name")) {
-                    rewardDisplayName = MessageUtils.colorize(String.valueOf(reward.get("display-name")));
+                    rewardDisplayName = ColorUtils.colorize(String.valueOf(reward.get("display-name")));
                 } else {
                     ItemMeta meta = displayItem.getItemMeta();
                     if (meta != null && meta.hasDisplayName()) {
                         rewardDisplayName = meta.getDisplayName();
                     } else {
-                        rewardDisplayName = key;
+                        rewardDisplayName = PathString.toPath(".", key);
                     }
                 }
                 int chance = reward.containsKey("chance") ? Integer.parseInt(String.valueOf(reward.get("chance"))) : 100;
@@ -125,10 +126,10 @@ public class CrateManager {
                     Map<String, Object> contentMap = (Map<String, Object>) rawContents;
                     RewardContentBuilder.INSTANCE.build(contentMap).ifPresent(contents::add);
                 }
-                rewards.add(new Reward(key, rewardDisplayName, fakeChance, displayItem, contents), chance);
+                rewards.add(new Reward(PathString.toPath(".", key), rewardDisplayName, fakeChance, displayItem, contents), chance);
             }
         }
-        lines.replaceAll(MessageUtils::colorize);
+        lines.replaceAll(ColorUtils::colorize);
         String finalCrateDisplayName = crateDisplayName;
         lines.replaceAll(s -> s.replace("{display-name}", finalCrateDisplayName));
         if (rewards.isEmpty()) {
@@ -141,7 +142,7 @@ public class CrateManager {
     private void loadCrateBlocks() {
         blockConfig.reload();
         List<RawCrateBlock> rawCrateBlocks = new ArrayList<>();
-        Object blocksObject = blockConfig.get("blocks");
+        Object blocksObject = blockConfig.getNormalized(new PathString("blocks"));
         if (blocksObject instanceof List) {
             List<?> blocks = (List<?>) blocksObject;
             for (Object rawBlock : blocks) {
@@ -168,7 +169,7 @@ public class CrateManager {
         for (CrateBlock crateBlock : crateBlockMap.values()) {
             blocks.add(crateBlock.toRaw().serialize());
         }
-        blockConfig.set("blocks", blocks);
+        blockConfig.set(new PathString("blocks"), blocks);
         blockConfig.save();
     }
 

@@ -3,9 +3,9 @@ package me.hsgamer.bettercrates.builder;
 import com.google.gson.Gson;
 import fr.mrmicky.fastinv.ItemBuilder;
 import me.hsgamer.hscore.builder.MassBuilder;
-import me.hsgamer.hscore.bukkit.utils.MessageUtils;
+import me.hsgamer.hscore.bukkit.utils.ColorUtils;
 import me.hsgamer.hscore.common.CollectionUtils;
-import me.hsgamer.hscore.common.interfaces.StringReplacer;
+import me.hsgamer.hscore.common.StringReplacer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -46,13 +46,13 @@ public class ItemStackBuilder extends MassBuilder<Map.Entry<Map<String, Object>,
             Optional.ofNullable(map.get("name"))
                     .map(String::valueOf)
                     .map(replacer::replace)
-                    .map(MessageUtils::colorize)
+                    .map(ColorUtils::colorize)
                     .ifPresent(builder::name);
             Optional.ofNullable(map.get("lore"))
                     .map(o -> {
                         List<String> list = CollectionUtils.createStringListFromObject(o, false);
                         list.replaceAll(replacer::replace);
-                        list.replaceAll(MessageUtils::colorize);
+                        list.replaceAll(ColorUtils::colorize);
                         return list;
                     })
                     .ifPresent(builder::lore);
@@ -86,22 +86,14 @@ public class ItemStackBuilder extends MassBuilder<Map.Entry<Map<String, Object>,
     }
 
     public void register(Function<Map.Entry<Map<String, Object>, StringReplacer>, ItemStack> creator, String... name) {
-        register(new Element<>() {
-            @Override
-            public boolean canBuild(Map.Entry<Map<String, Object>, StringReplacer> input) {
-                String type = Objects.toString(input.getKey().get("item-type"), "");
-                for (String s : name) {
-                    if (s.equalsIgnoreCase(type)) {
-                        return true;
-                    }
+        register(input -> {
+            String type = Objects.toString(input.getKey().get("item-type"), "");
+            for (String s : name) {
+                if (s.equalsIgnoreCase(type)) {
+                    return Optional.of(creator.apply(input));
                 }
-                return false;
             }
-
-            @Override
-            public ItemStack build(Map.Entry<Map<String, Object>, StringReplacer> input) {
-                return creator.apply(input);
-            }
+            return Optional.empty();
         });
     }
 
@@ -110,6 +102,6 @@ public class ItemStackBuilder extends MassBuilder<Map.Entry<Map<String, Object>,
     }
 
     public Optional<ItemStack> build(Map<String, Object> map) {
-        return build(map, (original, uuid) -> original);
+        return build(map, StringReplacer.DUMMY);
     }
 }

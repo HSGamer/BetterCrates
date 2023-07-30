@@ -7,6 +7,7 @@ import me.hsgamer.bettercrates.config.converter.StringObjectMapConverter;
 import me.hsgamer.bettercrates.crate.Crate;
 import me.hsgamer.bettercrates.crate.Reward;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
+import me.hsgamer.hscore.common.StringReplacer;
 import me.hsgamer.hscore.config.annotated.AnnotatedConfig;
 import me.hsgamer.hscore.config.annotation.ConfigPath;
 import me.hsgamer.hscore.config.annotation.converter.manager.DefaultConverterManager;
@@ -20,6 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 public class MainConfig extends AnnotatedConfig {
+    private static final String MESSAGE = "message";
+    private static final String PREVIEW = "preview";
+    private static final String CRATE = "crate";
+
     static {
         //noinspection UnstableApiUsage
         DefaultConverterManager.registerConverter(new TypeToken<List<String>>() {
@@ -29,24 +34,24 @@ public class MainConfig extends AnnotatedConfig {
         }.getType(), new StringObjectMapConverter());
     }
 
-    public final @ConfigPath("message.prefix") String prefix;
-    public final @ConfigPath("message.player-only") String playerOnly;
-    public final @ConfigPath("message.crate-not-found") String crateNotFound;
-    public final @ConfigPath("message.player-not-found") String playerNotFound;
-    public final @ConfigPath("message.block-required") String blockRequired;
-    public final @ConfigPath("message.block-already-set") String blockAlreadySet;
-    public final @ConfigPath("message.not-enough-key") String notEnoughKey;
-    public final @ConfigPath("message.crate-delaying") String crateDelaying;
-    public final @ConfigPath("message.reward") String rewardMessage;
-    public final @ConfigPath("message.give-key-success") String giveKeySuccess;
-    public final @ConfigPath("message.set-block-success") String setBlockSuccess;
-    public final @ConfigPath("preview.title") String previewTitle;
-    public final @ConfigPath("preview.lore-template") List<String> previewLoreTemplate;
-    public final @ConfigPath("preview.previous-item") Map<String, Object> previewPreviousItem;
-    public final @ConfigPath("preview.next-item") Map<String, Object> previewNextItem;
-    public final @ConfigPath("preview.fill-item") Map<String, Object> previewFillItem;
-    public final @ConfigPath("crate.default-lines") List<String> crateDefaultLines;
-    public final @ConfigPath("crate.key-item") Map<String, Object> crateKeyItem;
+    public final @ConfigPath({MESSAGE, "prefix"}) String prefix;
+    public final @ConfigPath({MESSAGE, "player-only"}) String playerOnly;
+    public final @ConfigPath({MESSAGE, "crate-not-found"}) String crateNotFound;
+    public final @ConfigPath({MESSAGE, "player-not-found"}) String playerNotFound;
+    public final @ConfigPath({MESSAGE, "block-required"}) String blockRequired;
+    public final @ConfigPath({MESSAGE, "block-already-set"}) String blockAlreadySet;
+    public final @ConfigPath({MESSAGE, "not-enough-key"}) String notEnoughKey;
+    public final @ConfigPath({MESSAGE, "crate-delaying"}) String crateDelaying;
+    public final @ConfigPath({MESSAGE, "reward"}) String rewardMessage;
+    public final @ConfigPath({MESSAGE, "give-key-success"}) String giveKeySuccess;
+    public final @ConfigPath({MESSAGE, "set-block-success"}) String setBlockSuccess;
+    public final @ConfigPath({PREVIEW, "title"}) String previewTitle;
+    public final @ConfigPath({PREVIEW, "lore-template"}) List<String> previewLoreTemplate;
+    public final @ConfigPath({PREVIEW, "previous-item"}) Map<String, Object> previewPreviousItem;
+    public final @ConfigPath({PREVIEW, "next-item"}) Map<String, Object> previewNextItem;
+    public final @ConfigPath({PREVIEW, "fill-item"}) Map<String, Object> previewFillItem;
+    public final @ConfigPath({CRATE, "default-lines"}) List<String> crateDefaultLines;
+    public final @ConfigPath({CRATE, "key-item"}) Map<String, Object> crateKeyItem;
 
     public MainConfig(Plugin plugin) {
         super(new BukkitConfig(plugin, "config.yml"));
@@ -105,9 +110,10 @@ public class MainConfig extends AnnotatedConfig {
     public ItemStack getCrateKey(String crateId, String displayName) {
         return ItemStackBuilder.INSTANCE
                 .build(crateKeyItem,
-                        (original, uuid) -> original
+                        StringReplacer.of(original -> original
                                 .replace("{crate}", crateId)
                                 .replace("{crate-id}", displayName)
+                        )
                 )
                 .orElse(new ItemStack(Material.STONE));
     }

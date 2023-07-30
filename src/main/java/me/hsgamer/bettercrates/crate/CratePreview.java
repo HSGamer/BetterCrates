@@ -3,7 +3,7 @@ package me.hsgamer.bettercrates.crate;
 import com.lewdev.probabilitylib.ProbabilityCollection;
 import fr.mrmicky.fastinv.FastInv;
 import me.hsgamer.bettercrates.BetterCrates;
-import me.hsgamer.hscore.bukkit.utils.MessageUtils;
+import me.hsgamer.hscore.bukkit.utils.ColorUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -23,7 +23,7 @@ public class CratePreview extends FastInv {
     private final int maxPage;
 
     public CratePreview(BetterCrates plugin, Crate crate) {
-        super(INV_SIZE, MessageUtils.colorize(plugin.getMainConfig().getPreviewTitle(crate)));
+        super(INV_SIZE, ColorUtils.colorize(plugin.getMainConfig().getPreviewTitle(crate)));
         this.plugin = plugin;
         this.crate = crate;
         displayItems = initDisplayItems();
@@ -57,7 +57,7 @@ public class CratePreview extends FastInv {
                                 .replace("{fake-chance}", Integer.toString(fakeChance))
                                 .replace("{total-chance}", Integer.toString(totalChance))
                                 .replace("{total-fake-chance}", Integer.toString(totalFakeChance.get()));
-                        finalLore.add(MessageUtils.colorize(line));
+                        finalLore.add(ColorUtils.colorize(line));
                     }
                 }
                 meta.setLore(finalLore.isEmpty() ? null : finalLore);
