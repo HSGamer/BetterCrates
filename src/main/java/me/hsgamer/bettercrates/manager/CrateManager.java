@@ -70,7 +70,7 @@ public class CrateManager {
         int crateKeyAmount = 1;
         for (PathString key : config.getKeys(false)) {
             if (key.equals("settings")) {
-                Map<String, Object> settings = PathString.toPathMap(".", config.getNormalizedValues(key, false));
+                Map<String, Object> settings = PathString.toPathMap(config.getNormalizedValues(key, false));
                 if (settings.containsKey("lines")) {
                     lines.clear();
                     lines.addAll(CollectionUtils.createStringListFromObject(settings.get("lines"), false));
@@ -94,7 +94,7 @@ public class CrateManager {
                     crateKeyAmount = Integer.parseInt(String.valueOf(settings.get("crate-key-amount")));
                 }
             } else {
-                Map<String, Object> reward = PathString.toPathMap(".", config.getNormalizedValues(key, false));
+                Map<String, Object> reward = PathString.toPathMap(config.getNormalizedValues(key, false));
                 // noinspection unchecked
                 Map<String, Object> displayItemMap = reward.containsKey("display-item") ? (Map<String, Object>) reward.get("display-item") : Collections.emptyMap();
                 ItemStack displayItem = ItemStackBuilder.INSTANCE.build(displayItemMap).orElse(new ItemStack(Material.STONE));
