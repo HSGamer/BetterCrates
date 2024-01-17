@@ -177,7 +177,7 @@
         <dependency>
             <groupId>com.lewdev</groupId>
             <artifactId>probability-lib</artifactId>
-            <version>0.8</version>
+            <version>0.10</version>
         </dependency>
         <dependency>
             <groupId>fr.mrmicky</groupId>
