@@ -106,7 +106,7 @@ public class CrateManager {
                     if (meta != null && meta.hasDisplayName()) {
                         rewardDisplayName = meta.getDisplayName();
                     } else {
-                        rewardDisplayName = PathString.toPath(".", key);
+                        rewardDisplayName = PathString.toPath(key);
                     }
                 }
                 int chance = reward.containsKey("chance") ? Integer.parseInt(String.valueOf(reward.get("chance"))) : 100;
@@ -126,7 +126,7 @@ public class CrateManager {
                     Map<String, Object> contentMap = (Map<String, Object>) rawContents;
                     RewardContentBuilder.INSTANCE.build(contentMap).ifPresent(contents::add);
                 }
-                rewards.add(new Reward(PathString.toPath(".", key), rewardDisplayName, fakeChance, displayItem, contents), chance);
+                rewards.add(new Reward(PathString.toPath(key), rewardDisplayName, fakeChance, displayItem, contents), chance);
             }
         }
         lines.replaceAll(ColorUtils::colorize);
