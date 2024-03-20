@@ -14,7 +14,7 @@
     <properties>
         <java.version>11</java.version>
         <core.version>4.3.26</core.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.32</lombok.version>
         <unihologram.version>2.4.1</unihologram.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
